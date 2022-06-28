@@ -1,0 +1,6 @@
+comtypes==1.1.11
+numpy==1.22.4
+open3d==0.15.1
+opencv_python==4.6.0.66
+pyrealsense2==2.50.0.3812
+visdom==0.1.8.9
