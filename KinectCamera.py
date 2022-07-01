@@ -28,5 +28,5 @@ class Camera(object):
                 depth_img = depth_2_color_space(self.camera, _DepthSpacePoint, self.camera._depth_frame_data, show=False, return_aligned_image=True)
                 depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_img, alpha=0.06), cv2.COLORMAP_JET)
                 # 获取点云
-                pts = color_2_world(self.camera, self.camera._depth_frame_data, _CameraSpacePoint, as_array=True)
-                return color_img, depth_img, depth_colormap, pts
+                # pts = color_2_world(self.camera, self.camera._depth_frame_data, _CameraSpacePoint, as_array=True)
+                return color_img, depth_img, depth_colormap

@@ -19,17 +19,16 @@ def increment_path(path, name='color_', suffix='png'):
 IMG_ID = increment_path(IMG_PATH, name = f'color_')
 
 # save data
-def save_data(color_img, depth_img, pts, id):
+def save_data(color_img, depth_img, id):
     cv2.imwrite(f'{IMG_PATH}\color_{id:03d}.png', color_img)
     cv2.imwrite(f'{IMG_PATH}\depth_{id:03d}.png', depth_img)
-    np.save(f'{IMG_PATH}\pc_{id:03d}.npy', pts)
     print(f'Saved at {IMG_PATH}\color_{id:03d}')
 
 #  click mouse mid button to save img
 def onMouse(event, x, y, flags, param):
     global IMG_ID
     if event == cv2.EVENT_MBUTTONDOWN:
-        save_data(color_img, depth_img, pts, IMG_ID)
+        save_data(color_img, depth_img, IMG_ID)
         IMG_ID += 1
 
 
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     cv2.namedWindow('Kinect', 0)
     cv2.setMouseCallback('Kinect', onMouse)
     while True:
-        color_img, depth_img, depth_colormap, pts = cam.get_data()
+        color_img, depth_img, depth_colormap = cam.get_data()
 
         # Show images
         images = np.vstack([color_img[:,:,:3], depth_colormap])
@@ -56,7 +55,7 @@ if __name__ == '__main__':
             cv2.destroyAllWindows()
             exit()
         if c in [ord('r'), ord('R'), 13, 32]:
-            save_data(color_img, depth_img, pts, IMG_ID)
+            save_data(color_img, depth_img, IMG_ID)
             IMG_ID += 1
 
         # if c in [ord('f'), ord('F')]:
