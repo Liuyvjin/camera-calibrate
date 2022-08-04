@@ -2,7 +2,7 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 
-class Camera(object):
+class RSCamera(object):
     def __init__(self, width=640, height=480):
         self.pipeline = rs.pipeline()
         self.config = rs.config()
@@ -69,7 +69,7 @@ def vis_pc(pc):
     o3d.visualization.draw_geometries([pc1])
 
 if __name__ == "__main__":
-    cam = Camera(width=640, height=480)
+    cam = RSCamera(width=640, height=480)
     depth_sensor = cam.pipeline_profile.get_device().first_depth_sensor()
     depth_scale = depth_sensor.get_depth_scale()
     print("Depth scale is: ", depth_scale)

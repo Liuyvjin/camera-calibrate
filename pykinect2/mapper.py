@@ -465,7 +465,6 @@ if __name__ == '__main__':
         Example of some usages
     """
     import ctypes
-    from visdom import Visdom
 
     from pykinect2 import PyKinectV2
     from pykinect2.PyKinectV2 import *

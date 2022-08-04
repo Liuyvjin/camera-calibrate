@@ -2,8 +2,7 @@ import os
 import cv2
 import numpy as np
 from pathlib import Path
-import open3d as o3d
-from KinectCamera import Camera
+from KinectCamera import KinectCamera as Camera
 import time
 
 BASE_PATH = Path(__file__).resolve().parent

@@ -3,10 +3,10 @@ import numpy as np
 from pykinect2 import PyKinectV2
 from pykinect2.PyKinectV2 import *
 from pykinect2 import PyKinectRuntime
-from mapper import depth_2_world, color_2_depth_space, depth_2_color_space, color_2_world
+from pykinect2.mapper import depth_2_world, color_2_depth_space, depth_2_color_space, color_2_world
 
 # kinect
-class Camera(object):
+class KinectCamera(object):
     def __init__(self ):
         kinect = PyKinectRuntime.PyKinectRuntime(PyKinectV2.FrameSourceTypes_Depth | PyKinectV2.FrameSourceTypes_Color)
         self.camera = kinect
