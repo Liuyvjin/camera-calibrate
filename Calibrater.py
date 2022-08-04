@@ -180,7 +180,7 @@ class HandEyeCalibrater(Calibrater):
 
 
 if __name__ == '__main__':
-    from KinectCamera import Camera
+    from cameras import KinectCamera as Camera
 
     cam = Camera()
     cali = Calibrater(lambda: cam.get_data()[0])

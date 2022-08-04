@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 from pathlib import Path
-from KinectCamera import KinectCamera as Camera
+from cameras import KinectCamera as Camera
 import time
 
 BASE_PATH = Path(__file__).resolve().parent
@@ -18,7 +18,7 @@ def increment_path(path, name='color_', suffix='png'):
     return n
 
 IMG_ID = increment_path(IMG_PATH, name = f'color_')  # first id
-PAUSE_FLAG = False
+PAUSE_FLAG = True
 
 # save data
 def save_data(color_img, depth_img, id):

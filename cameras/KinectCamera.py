@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
-from pykinect2 import PyKinectV2
-from pykinect2.PyKinectV2 import *
-from pykinect2 import PyKinectRuntime
-from pykinect2.mapper import depth_2_world, color_2_depth_space, depth_2_color_space, color_2_world
+from .pykinect2 import PyKinectV2
+from .pykinect2.PyKinectV2 import *
+from .pykinect2 import PyKinectRuntime
+from .pykinect2.mapper import depth_2_world, color_2_depth_space, depth_2_color_space, color_2_world
 
 # kinect
 class KinectCamera(object):
