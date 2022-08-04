@@ -180,11 +180,14 @@ class HandEyeCalibrater(Calibrater):
 
 
 if __name__ == '__main__':
-    from cameras import KinectCamera as Camera
+    # from cameras import KinectCamera as Camera
+    from cameras import Camera
 
     cam = Camera()
-    cali = Calibrater(lambda: cam.get_data()[0])
-    cali.calibrate(img_num=20, save=True)
+    get_data = lambda: cam.get_data()
+
+    cali = Calibrater(get_data)
+    cali.calibrate(img_num=5, save=True)
 
     with np.load('intrinsics.npz') as file:
         mtx, dist = [file[i] for i in ('mtx','dist')]
@@ -193,7 +196,7 @@ if __name__ == '__main__':
     # 实时显示 3d 坐标
     cv2.namedWindow('3d_axis', cv2.WINDOW_AUTOSIZE)
     while True:
-        img = cam.get_data()[0]
+        img = get_data()
         img = cali.draw_axis(img)
         cv2.imshow('3d_axis', img)
         c = cv2.waitKey(1)

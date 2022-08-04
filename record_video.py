@@ -19,6 +19,8 @@ def increment_path(path, name='color_', suffix='png'):
 
 IMG_ID = increment_path(IMG_PATH, name = f'color_')  # first id
 PAUSE_FLAG = True
+cnt = 10  # 拍摄图片数量，当为 0 时退出
+interval = 5  # 间隔时间
 
 # save data
 def save_data(color_img, depth_img, id):
@@ -47,13 +49,14 @@ if __name__ == '__main__':
         c = cv2.waitKey(1)
 
         # record img
-        if time.time() - 5 > last_time and not PAUSE_FLAG:
+        if time.time() - interval > last_time and not PAUSE_FLAG:
             last_time = time.time()
             save_data(color_img, depth_img, IMG_ID)
             IMG_ID += 1
+            cnt -= 1
 
         # key control
-        if c == 27 or c == ord('q'):
+        if c == 27 or c == ord('q') or cnt==0:
             cv2.destroyAllWindows()
             exit()
 
