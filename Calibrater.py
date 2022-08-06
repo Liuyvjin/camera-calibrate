@@ -56,7 +56,8 @@ class Calibrater:
             if c == 13 and ret == True:  # 按下 enter 捕获当前图像角点
                 img_points.append(corners)
                 obj_points.append(self.obj_p)
-                print("captured {} / {} images".format(cnt := cnt+1, img_num) )
+                cnt += 1
+                print("captured {} / {} images".format(cnt, img_num) )
             elif c == 27 or c == ord('q'):
                 exit()
         cv2.destroyAllWindows()
@@ -155,7 +156,8 @@ class HandEyeCalibrater(Calibrater):
                 if mode == 2:  # base2gripper(eye-to-hand)
                     pose = np.linalg.pinv(pose)
                 robot_poses.append(pose)
-                print("Captured {} / {} images".format(cnt := cnt+1, img_num) )
+                cnt += 1
+                print("Captured {} / {} images".format(cnt, img_num) )
             elif c == 27 or c == ord('q'):
                 exit()
         cv2.destroyAllWindows()
@@ -184,6 +186,7 @@ if __name__ == '__main__':
     from cameras import Camera
 
     cam = Camera()
+    # get_data = lambda: cam.get_data()[0]
     get_data = lambda: cam.get_data()
 
     cali = Calibrater(get_data)
