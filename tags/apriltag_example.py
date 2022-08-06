@@ -12,8 +12,6 @@ if __name__ == '__main__':
     cv2.namedWindow('tag', 0)
     while True:
         img = cam.get_data()
-        cv2.imshow("tag", img)
-        c = cv2.waitKey(100)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         at_detector = Detector(families='tag36h11',
@@ -26,4 +24,18 @@ if __name__ == '__main__':
 
         tags = at_detector.detect(gray, estimate_tag_pose=False, camera_params=None, tag_size=None)
 
-        print(tags)
+        for tag in tags:  # 绘制检测到 tag 角点
+            id = 1
+            for c in tag.corners:  # 从 tag 的左下角点逆时针旋转
+                cv2.circle(img, tuple(c.astype(int)), 4, (0, 0, 255), 2)
+                cv2.putText(img, str(id), tuple(c.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                id += 1
+            cv2.circle(img, tuple(tag.center.astype(int)), 4, (200,180,2), 4)
+
+        cv2.imshow("tag", img)
+        c = cv2.waitKey(100)
+        if c == 27 or c == ord('q'):
+            cv2.destroyAllWindows()
+            exit()
+
+        # print(tags)

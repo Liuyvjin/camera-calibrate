@@ -1,3 +1,6 @@
 from cameras.DefaultCamera import Camera
-from cameras.KinectCamera import KinectCamera
+try:
+    from cameras.KinectCamera import KinectCamera
+except:
+    pass
 from cameras.RealsenseCamera import RSCamera
