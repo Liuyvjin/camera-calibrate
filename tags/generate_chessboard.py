@@ -1,7 +1,8 @@
-# 生成 apriltag 组成的棋盘格, 用于相机标定
+# 生成 apriltags 组成的棋盘格, 用于相机标定
 import numpy as np
 import cv2
 from pathlib import Path
+
 
 if __name__ == '__main__':
     # tag 存放目录
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     # 以第一个 tag 的左上角为原点 (col, row)，打印后根据真实尺寸缩放到真实坐标
     # 针对每个 tag，角点顺序为 (左下, 右下, 右上, 左上), 与 apriltag 检测顺序一致
     corners = []
-    border_size = (tag_size-2) * scale  # 放大后的黑框尺寸
+    border_size = (tag_size-2) * scale  # 放大后的黑框尺寸 (8, 8)*20
     grid_size = grid_size * scale  # 放大后的 grid_size
     tmp = np.array([[0, border_size], [border_size, border_size], [border_size, 0], [0, 0]], dtype=np.int16)
     for i in range(row):
@@ -41,15 +42,16 @@ if __name__ == '__main__':
             cv2.putText(chessboard, str(i*col + j), (dcol+5, drow+border_size), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (125, 125, 125), 2)
     corners = np.concatenate(corners, axis=0)
 
-    # 绘制每一个角点
-    # for i in range(corners.shape[0]):
-    #     id = i // 4
-    #     cv2.circle(chessboard, corners[i] + (bias+1)*scale, 4, ((id*131)%255, (id*107)%255, (id*211)%255), 2)
-
-    # 可视化
+    # 绘制每一个角点并可视化
+    chessboard_show = chessboard.copy()
+    cv2.drawChessboardCorners(chessboard_show, (4, corners.shape[0]//4),
+        (corners + (bias+1)*scale).astype(np.float32) , True)
     cv2.namedWindow("chessboard")
-    cv2.imshow("chessboard", chessboard)
+    cv2.imshow("chessboard", chessboard_show)
     cv2.waitKey(0)
+
+    # 将角点像素坐标按照黑框长度归一化, 1 代表黑框长度
+    corners = corners.astype(np.float32) / border_size
 
     # 保存
     cv2.imwrite(str(CurDir / "apriltag_board.png"), chessboard)

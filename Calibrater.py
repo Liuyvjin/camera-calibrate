@@ -17,10 +17,10 @@ def rtvec2transform(rvec, tvec):
 
 
 class Calibrater:
-    def __init__(self, get_img, pattern_shape=(8, 6), pattern_size=0.15):
+    def __init__(self, get_img, pattern_shape=(9, 6), pattern_size=0.15):
         """
         :param get_img: 从相机获取图片的函数
-        :param pattern_shape: 标定板角点数, defaults to (8, 6)
+        :param pattern_shape: 标定板角点数, defaults to (9, 6)
         :param pattern_size: 标定板格点尺寸(m), defaults to 0.15
         """
         self.get_img = get_img
@@ -47,7 +47,7 @@ class Calibrater:
         cnt = 0
         while cnt < img_num:  # 共需要记录 self.img_num 组数据
             img = self.get_img()
-            ret, corners = self.find_corners(img)
+            ret, corners = self.find_corners(img)  # corners - [9*6, 1, 2]
             if ret == True:
                 cv2.drawChessboardCorners(img, (self.pat_w, self.pat_h), corners, ret)  # 绘图
 

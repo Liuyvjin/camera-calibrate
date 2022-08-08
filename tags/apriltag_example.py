@@ -24,11 +24,11 @@ if __name__ == '__main__':
 
         tags = at_detector.detect(gray, estimate_tag_pose=False, camera_params=None, tag_size=None)
 
+        id = 1
         for tag in tags:  # 绘制检测到 tag 角点
-            id = 1
             for c in tag.corners:  # 从 tag 的左下角点逆时针旋转
-                cv2.circle(img, tuple(c.astype(int)), 4, (0, 0, 255), 2)
-                cv2.putText(img, str(id), tuple(c.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                cv2.circle(img, tuple(c.astype(int)), 3, (0, 0, 255), 1)
+                cv2.putText(img, str(id), tuple(c.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 0.25, (255, 0, 0), 1)
                 id += 1
             cv2.circle(img, tuple(tag.center.astype(int)), 4, (200,180,2), 4)
 
