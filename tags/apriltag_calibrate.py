@@ -8,20 +8,6 @@ from cameras import Camera
 
 CUR_PATH = str(Path(__file__).resolve().parent) + '\\'
 
-def rtvec2transform(rvec, tvec):
-    """ 将旋转向量和位移向量, 转换为矩阵形式
-
-    :param rvec: 旋转向量 (3,1) 或 (1,3)
-    :param tvec: 位移向量 (3,1) 或 (1,3)
-    :return: 齐次变换矩阵 (4, 4)
-    """
-    rmat, _ = cv2.Rodrigues(rvec)
-    trans = np.identity(4)
-    trans[0:3, 0:3] = rmat
-    trans[0:3, 3] = tvec.squeeze()
-    return trans
-
-
 class ApriltagCalibrater:
     def __init__(self, get_img, corner_file=CUR_PATH+'apriltag_corners.npz', tag_size=0.15):
         """
@@ -93,13 +79,11 @@ class ApriltagCalibrater:
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         tags = self.at_detector.detect(gray, estimate_tag_pose=False, camera_params=None, tag_size=None)
         corners = np.zeros((self.corner_num, 1, 2), dtype=np.float32)
-        idx = 0
-        for tag in tags:  # 收集角点
-            corners[idx:idx+4, 0] = tag.corners
-            idx += 4
+        for tag, i in zip(tags, range(0, len(tags)*4, 4)):  # 收集角点
+            corners[i:i+4, 0] = tag.corners
         if show:
-            cv2.drawChessboardCorners(img, (4, idx//4), corners, True)  # 绘图
-        if idx < self.corner_num:
+            cv2.drawChessboardCorners(img, (4, len(tags)), corners, True)  # 绘图
+        if len(tags)*4 < self.corner_num:
             return False, None
         else:
             return True, corners
@@ -126,12 +110,11 @@ class ApriltagCalibrater:
         if ret==True:
             ret, rvec, tvec = cv2.solvePnP(self.obj_p, corners, self.mtx, self.dist)
             # 将3D点投影到图像平面
-            axis_2d, _ = cv2.projectPoints(axis_3d, rvec, tvec, self.mtx, self.dist)
-            axis_2d = axis_2d.astype(int).squeeze()
+            axis_2d = cv2.projectPoints(axis_3d, rvec, tvec, self.mtx, self.dist)[0].astype(int).squeeze()
             origin = corners[3].astype(int).ravel()  # 注意第 4 个点才是原点
-            img = cv2.line(img, origin, axis_2d[0], (255,0,0), 5)
-            img = cv2.line(img, origin, axis_2d[1], (0,255,0), 5)
-            img = cv2.line(img, origin, axis_2d[2], (0,0,255), 5)
+            cv2.line(img, origin, axis_2d[0], (255,0,0), 5)  # B
+            cv2.line(img, origin, axis_2d[1], (0,255,0), 5)  # G
+            cv2.line(img, origin, axis_2d[2], (0,0,255), 5)  # R
         return img
 
 if __name__ == '__main__':
@@ -140,11 +123,11 @@ if __name__ == '__main__':
 
     cam = Camera()
     get_data = lambda: cam.get_data()
-    # get_data = lambda: cam.get_data()[0]
 
+    # 标定内参，并保存
     cali = ApriltagCalibrater(get_data)
     cali.calibrate(img_num=5, save=True)
-
+    # 读入内参
     with np.load(CUR_PATH+'intrinsics.npz') as file:
         mtx, dist = [file[i] for i in ('mtx','dist')]
     print(mtx)
