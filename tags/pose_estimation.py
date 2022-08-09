@@ -50,7 +50,7 @@ if __name__ == '__main__':
             print(cv2.Rodrigues(rvec)[0])
             print(tvec)
             # 将 3D 坐标系投影到图像平面
-            axis_3d = np.float32([[0.5,0,0], [0,0.5,0], [0,0,-0.5]])  # 要绘制的 3D 点
+            axis_3d = np.float32([[0.5,0,0], [0,0.5,0], [0,0,-0.5]]) * tag_size # 要绘制的 3D 点
             axis_2d = cv2.projectPoints(axis_3d, rvec, tvec, mtx, dist)[0].astype(int).squeeze()
             origin = tag.center.astype(int).reshape(-1)  # 注意第 4 个点才是原点
             cv2.line(img, origin, axis_2d[0], (255,0,0), 5) # B
@@ -71,7 +71,7 @@ if __name__ == '__main__':
             print(tag.pose_R)
             print(tag.pose_t)
             # 将 3D 坐标系投影到图像平面
-            axis_3d = np.float32([[0.5,0,0], [0,0.5,0], [0,0,-0.5]])  # 要绘制的 3D 点
+            axis_3d = np.float32([[0.5,0,0], [0,0.5,0], [0,0,-0.5]]) * tag_size # 要绘制的 3D 点
             axis_2d = cv2.projectPoints(axis_3d, tag.pose_R, tag.pose_t, mtx, dist)[0].astype(int).squeeze()
             origin = tag.center.astype(int).reshape(-1)  # 注意第 4 个点才是原点
             cv2.line(img1, origin, axis_2d[0], (255,0,0), 5) # B
@@ -82,7 +82,7 @@ if __name__ == '__main__':
         cv2.putText(img, "solvePnP", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
         cv2.putText(img1, "AprilTag", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
         cv2.imshow("tag", np.hstack([img, img1]))
-        c = cv2.waitKey(100)
+        c = cv2.waitKey(10)
         if c == 27 or c == ord('q'):
             cv2.destroyAllWindows()
             exit()

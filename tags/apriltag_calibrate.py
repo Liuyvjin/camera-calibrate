@@ -78,15 +78,15 @@ class ApriltagCalibrater:
         """
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         tags = self.at_detector.detect(gray, estimate_tag_pose=False, camera_params=None, tag_size=None)
+        if len(tags) * 4 < self.corner_num:
+            return False, None
+
         corners = np.zeros((self.corner_num, 1, 2), dtype=np.float32)
-        for tag, i in zip(tags, range(0, len(tags)*4, 4)):  # 收集角点
+        for tag, i in zip(tags, range(0, len(tags) * 4, 4)):  # 收集角点
             corners[i:i+4, 0] = tag.corners
         if show:
             cv2.drawChessboardCorners(img, (4, len(tags)), corners, True)  # 绘图
-        if len(tags)*4 < self.corner_num:
-            return False, None
-        else:
-            return True, corners
+        return True, corners
 
     def eval_reproj_error(self, img_points, rvecs, tvecs, mtx, dist):
         """计算重投影误差, 评估标定结果
