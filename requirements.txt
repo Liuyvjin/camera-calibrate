@@ -1,8 +1,8 @@
 comtypes==1.1.11
-numpy
-open3d==0.15.1
+numpy==1.21.6
 opencv_python==4.6.0.66
 pyrealsense2==2.50.0.3812
 pupil-apriltags==1.0.4
-pupil-pthreads-win==2
-wincertstore==0.2
+PyQt5==5.15.7
+pyqtgraph==0.12.4
+PyOpenGL==3.1.6

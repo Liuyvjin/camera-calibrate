@@ -45,10 +45,10 @@ class ApriltagUtils:
             ret, tag.pose_r, tag.pose_t = cv2.solvePnP(self.obj_p, img_p, mtx, dist)
             # 绘制角点，从 tag 的左下角点逆时针旋转
             if show:
-                self.display_tag_pose(img, tag)
+                self.display_pose(img, tag, mtx, dist)
         return tags
 
-    def display_tag_pose(self, img, tag):
+    def display_pose(self, img, tag, mtx, dist):
         """ 可视化检测出的 tag 以及其位姿 """
         for i, c in enumerate(tag.corners):
             cv2.circle(img, tuple(c.astype(int)), 3, (0, 0, 255), 1)
