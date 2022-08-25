@@ -5,7 +5,7 @@ CUR_DIR = Path(__file__).resolve().parent
 sys.path.append(CUR_DIR)
 import numpy as np
 import cv2
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout, QSizePolicy
 from PyQt5.QtGui import QImage, QPixmap, QColor
 from PyQt5.QtCore import QTimer, pyqtSignal
 import pyqtgraph.opengl as gl
@@ -16,7 +16,7 @@ from Calibrater import rtvec2transform
 COLORS = (QColor(255,0,0), QColor(255,97,0), QColor(255,255,0), QColor(0,255,0), QColor(0,255,255), QColor(0,0,255), QColor(255,0,255))
 
 class ApriltagUI(QWidget):
-    TagDetectedSignal = pyqtSignal(object)
+    # TagDetectedSignal = pyqtSignal(object)
     def __init__(self):
         super(ApriltagUI, self).__init__()
         # 相机和 at 检测器
@@ -31,8 +31,8 @@ class ApriltagUI(QWidget):
         # 定时器，20ms 主循环
         self.timer = QTimer()
         self.timer.timeout.connect(self.main_loop)
-        self.timer.start(20)
-        self.TagDetectedSignal.connect(self.draw_tags)
+        self.timer.start(0)
+        # self.TagDetectedSignal.connect(self.draw_tags)
 
     def ui_init(self):
         self.width = 640 * 2 + 50
@@ -53,6 +53,7 @@ class ApriltagUI(QWidget):
 
         self.cam_viewer = QLabel(self)
         self.cam_viewer.resize(640, 480)
+        self.cam_viewer.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)  # 自由缩放
         self.gl_viewer = gl.GLViewWidget()          # 定义 opengl 3d 可视化窗口
         self.gl_viewer.resize(640, 480)
         self.gl_viewer.setCameraPosition(distance=30, elevation = 90, azimuth=90)
@@ -94,7 +95,8 @@ class ApriltagUI(QWidget):
     def main_loop(self):
         img = self.cam.get_data() # 可视化 OpenCV 位姿估计结果
         tags = self.apriltag.estimate_pose(img, self.mtx, self.dist)
-        self.TagDetectedSignal.emit(tags)
+        # self.TagDetectedSignal.emit(tags)
+        self.draw_tags(tags)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         frame = QImage(img, img.shape[1], img.shape[0], img.shape[1] * 3, QImage.Format_RGB888)
         picture = QPixmap.fromImage(frame).scaled(self.cam_viewer.width(), self.cam_viewer.height())

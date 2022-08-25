@@ -124,7 +124,7 @@ class HandEyeCalibrater(Calibrater):
         :param pattern_shape: 标定板角点数, defaults to (8, 6)
         :param pattern_size: 标定板格点尺寸(m), defaults to 0.15
         """
-        super().__init__(self, get_img, pattern_shape, pattern_size)
+        super().__init__(get_img, pattern_shape, pattern_size)
         self.get_pose = get_pose  # 读取机器人末端坐标到基座坐标的转换
 
     def calibrate(self, img_num, mode=1, save=False):

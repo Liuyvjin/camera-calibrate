@@ -48,6 +48,25 @@ class ApriltagUtils:
                 self.display_pose(img, tag, mtx, dist)
         return tags
 
+    def estimate_pose_at(self, img, mtx, dist, show=True) :
+        """使用 apriltag 估计位姿
+
+        :param img: 图像
+        :param mtx: 相机内参矩阵
+        :param dist: 相机畸变参数
+        :param show: 在 img 中绘制角点
+        """
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.undistort(gray, mtx, dist)  # 图像去畸变
+        mtx_vec = [mtx[0,0], mtx[1,1], mtx[0,2], mtx[1,2]]
+        tags = self.at_detector.detect(gray, estimate_tag_pose=True, camera_params=mtx_vec, tag_size=self.tag_size)
+        for tag in tags:
+            # 绘制角点，从 tag 的左下角点逆时针旋转
+            tag.pose_r = cv2.Rodrigues(tag.pose_R)[0]
+            if show:
+                self.display_pose(img, tag, mtx, dist)
+        return tags
+
     def display_pose(self, img, tag, mtx, dist):
         """ 可视化检测出的 tag 以及其位姿 """
         for i, c in enumerate(tag.corners):
